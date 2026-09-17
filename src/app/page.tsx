@@ -1,69 +1,118 @@
-import Image from "next/image";
+import { get_bot_list, get_bot_status } from "@/lib/bot-health-check"
+import { cn } from "cn"
+import { Suspense } from "react"
+import { interpolate, formatCss } from 'culori'
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <div className="flex flex-col gap-20">
+      <header>
+        <h1 className="text-4xl font-semibold tracking-tight">Discord Bot Health Status</h1>
+        <p className="">Monitor the health and status of various Discord bots.</p>
+      </header>
+
+      <Suspense fallback={<p>Loading bot statuses...</p>}>
+        <BotStatuses />
+      </Suspense>
     </div>
-  );
+  )
+}
+
+
+async function BotStatuses() {
+
+  const status = await get_bot_status()
+  const bots = await get_bot_list()
+
+
+  const color = interpolate([
+    '#dc2626',
+    '#ea580c',
+    '#d97706',
+    '#d97706',
+    '#ca8a04',
+    '#65a30d',
+    '#22c55e',
+  ])
+
+  return <div className="flex flex-col gap-18">
+    {Object.entries(status.bots).map(([ botId, botStatus ]) => {
+      const bot = bots.bots.find(b => b.id === botId)
+      return <div key={botId} className="flex flex-col gap-4">
+        <div className="flex gap-2">
+          <img className="size-12 rounded-full" width={48} height={48} src={bot?.icon ?? ""} />
+          <div className="flex flex-col mt-1">
+            <h2 className="text-2xl font-semibold tracking-tight leading-6">{bot?.display_name ?? bot?.username ?? botId}</h2>
+            <p className="text-fg/50" >{bot?.tag}</p>
+          </div>
+        </div>
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2">
+            <div className={cn("size-2.5 bg-red-400 rounded-full",
+              botStatus.latest?.status === "offline" ? "bg-red-500"
+                : botStatus.latest?.status === "online" ? "bg-green-500"
+                  : botStatus.latest?.status === "stale" ? "bg-orange-500" :
+                    botStatus.latest?.status === "unknown" ? "bg-fg/50" : "bg-fg/10"
+            )} />
+            <div>
+              {botStatus.latest?.status === "offline" ? "Offline"
+                : botStatus.latest?.status === "online" ? "Online"
+                  : botStatus.latest?.status === "stale" ? "Stale" :
+                    botStatus.latest?.status === "unknown" ? "Unknown" : "??"
+              }
+            </div>
+            <div className="border-l border-l-fg/50 w-px h-5 mx-2" />
+            <div>
+              Last seen: {botStatus.latest?.last_seen ? new Date(botStatus.latest?.last_seen).toLocaleString() : "Unknown"}
+            </div>
+          </div>
+          <div className="text-fg/50">{'<-'} Now</div>
+          <div className="flex flex-wrap gap-2">
+            {botStatus.hourly.map((hour, hour_id) => {
+              return (
+                <div key={hour_id} className="size-12 rounded-sm bg-fg/5 relative group"
+                  style={{
+                    background: formatCss(color(hour.uptime_pct / 100))
+                  }}
+                >
+                  <div className={cn(
+                    "absolute -bottom-2 translate-y-full left-1/2 -translate-x-1/2",
+                    "bg-bg border border-fg/30 rounded-md p-1 px-2",
+                    "text-sm w-max max-w-60",
+                    "transition-all duration-150",
+                    "opacity-0 group-hover:opacity-100",
+                    "scale-90 group-hover:scale-100",
+                    "origin-top",
+                  )}>
+                    <div className="">
+                      {new Date(hour.hour).toLocaleString('en-US', {
+                        timeStyle: "short",
+                        dateStyle: "medium",
+                      })}
+                    </div>
+                    <div className="">
+                      {hour.uptime_pct}% uptime
+                    </div>
+                    <div className="">
+                      {hour.uptime_pct}% uptime
+                    </div>
+                    <div className="">
+                      {hour.online} online pings
+                    </div>
+                    <div className="">
+                      {hour.offline} offline pings
+                    </div>
+                    <div className="">
+                      {hour.total} total pings
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </div>
+    })}
+
+  </div>
 }
