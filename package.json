@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@types/culori": "^4.0.1",
+    "@vercel/analytics": "^2.0.1",
     "cn": "^0.3.0",
     "culori": "^4.0.2",
     "date-fns": "^4.4.0",
