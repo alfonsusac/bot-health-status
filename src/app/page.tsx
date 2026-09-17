@@ -4,6 +4,9 @@ import { Suspense } from "react"
 import { interpolate, formatCss } from 'culori'
 import Link from "next/link"
 import { LucideArrowUpRight } from "@/lib/icons"
+import { formatDistanceToNow } from "date-fns"
+import { RelativeTime } from "./page-client"
+
 
 export default function Home() {
   return (
@@ -128,6 +131,6 @@ async function BotStatuses() {
         </div>
       </div>
     })}
-
+    Updated at: <RelativeTime time={new Date().toISOString()} />
   </div>
 }

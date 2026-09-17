@@ -1,3 +1,5 @@
+import { unstable_cache } from "next/cache"
+
 export type HealthStatus = "online" | "offline" | "stale" | "unknown"
 
 export type HealthCheckResult = {
@@ -35,7 +37,7 @@ export type BotsResponse = {
     support_server: string
     error?: string
   }>
-};
+}
 
 export type AllBotsStatusResponse = {
   days: number
@@ -67,15 +69,19 @@ export type ApiError = {
 
 
 
-export async function get_bot_status() {
-  if (process.env.DATA_URL === undefined) throw new Error("DATA_URL procee env is required!") 
+export const get_bot_status = unstable_cache(async function get_bot_status() {
+  if (process.env.DATA_URL === undefined) throw new Error("DATA_URL procee env is required!")
   const res = await fetch(new URL('/status', process.env.DATA_URL).toString())
   const data = await res.json() as AllBotsStatusResponse
   return data
-}
+}, [], {
+  revalidate: 60 * 10 // every 10 mins
+})
 
-export async function get_bot_list() {
+export const get_bot_list = unstable_cache(async function get_bot_list() {
   const res = await fetch(new URL('/bots', process.env.DATA_URL).toString())
   const data = await res.json() as BotsResponse
   return data
-}
+}, [], {
+  revalidate: 60 * 60 * 12 // half a day
+})

@@ -27,12 +27,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <div className="flex flex-col max-w-180 mx-auto grow w-full">
           {children}
         </div>
-        <footer className="max-w-180 mx-auto w-full pt-40 flex flex-col items-start">
+        <footer className="max-w-180 mx-auto w-full pt-40 flex flex-col items-start pb-40">
           <div>
-            risky's honeypot discord server
-          </div>
-          <div>
-
+            made by alfonsusac
           </div>
         </footer>
       </body>
