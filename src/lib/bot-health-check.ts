@@ -31,6 +31,8 @@ export type BotsResponse = {
     username: string
     tag: string
     icon: string | null
+    author: string
+    support_server: string
     error?: string
   }>
 };
@@ -66,6 +68,7 @@ export type ApiError = {
 
 
 export async function get_bot_status() {
+  if (process.env.DATA_URL === undefined) throw new Error("DATA_URL procee env is required!") 
   const res = await fetch(new URL('/status', process.env.DATA_URL).toString())
   const data = await res.json() as AllBotsStatusResponse
   return data

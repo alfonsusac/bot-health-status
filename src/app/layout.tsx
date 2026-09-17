@@ -23,10 +23,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${ geistSans.variable } ${ geistMono.variable } h-full antialiased`}
     >
-      <body className="min-h-full p-12">
-        <div className="flex flex-col max-w-180 mx-auto"> 
+      <body className="min-h-full p-12 flex flex-col min-h-screen">
+        <div className="flex flex-col max-w-180 mx-auto grow w-full">
           {children}
         </div>
+        <footer className="max-w-180 mx-auto w-full pt-40 flex flex-col items-start">
+          <div>
+            risky's honeypot discord server
+          </div>
+          <div>
+
+          </div>
+        </footer>
       </body>
     </html>
   )
