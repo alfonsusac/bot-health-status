@@ -47,7 +47,7 @@ async function BotStatuses() {
         <div className="flex gap-2">
           <img className="size-12 rounded-md" width={48} height={48} src={bot?.icon ?? ""} />
           <div className="flex flex-col mt-1">
-            <h2 className="text-2xl font-semibold tracking-tight leading-6">{bot?.display_name ?? bot?.username ?? botId}</h2>
+            <h2 className="text-2xl font-semibold tracking-tight leading-6">{bot?.display_name ?? bot?.username ?? bot?.tag ?? botId}</h2>
             <div className="flex items-center gap-2">
               <p className="text-fg/50" >{bot?.tag} by {bot?.author}</p>
               <div className="border-l border-l-fg/50 w-px h-5 mx-2" />
