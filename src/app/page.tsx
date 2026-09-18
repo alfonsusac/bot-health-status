@@ -37,6 +37,11 @@ export default function Home() {
         <div>
           Made by alfonsusac
         </div>
+        <div className="text-sm pt-8 opacity-50">
+          <Link href="https://vercel.com/alfonsusacs-projects/bot-health-status">
+            Vercel <LucideArrowUpRight className="inline mb-0.5" />
+          </Link>
+        </div>
       </section>
     </div>
   )
