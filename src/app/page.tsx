@@ -77,7 +77,7 @@ async function BotStatuses() {
             </div>
             <div className="border-l border-l-fg/50 w-px h-5 mx-2" />
             <div>
-              Last seen: {botStatus.latest?.last_seen ? new Date(botStatus.latest?.last_seen).toLocaleString() : "Unknown"}
+              Last seen: {botStatus.latest?.last_seen ? <RelativeTime time={new Date(botStatus.latest?.last_seen).toISOString()} /> : "Unknown"}
             </div>
           </div>
           <div className="text-fg/50">{'<-'} Now</div>
