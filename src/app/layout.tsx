@@ -30,9 +30,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {children}
         </div>
         <footer className="max-w-180 mx-auto w-full pt-40 flex flex-col items-start pb-40">
-          <div>
-            made by alfonsusac
-          </div>
+
         </footer>
         <Analytics />
       </body>

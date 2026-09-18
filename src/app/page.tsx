@@ -10,15 +10,28 @@ import { RelativeTime } from "./page-client"
 
 export default function Home() {
   return (
-    <div className="flex flex-col gap-20">
-      <header>
+    <div className="flex flex-col gap-20 h-full">
+      <header className="pt-10">
         <h1 className="text-4xl font-semibold tracking-tight">Discord Bot Health Status</h1>
-        <p className="">Monitor the health and status of various Discord bots.</p>
+        <p className="">Monitor the health and status of various Discord bot by checking their presence.</p>
       </header>
 
-      <Suspense fallback={<p>Loading bot statuses...</p>}>
+      <Suspense fallback={<div className="grow">Loading bot statuses...</div>}>
         <BotStatuses />
       </Suspense>
+
+      <section className="flex flex-col **:leading-7 *:my-3">
+        <p>
+          This site works by checking the presence of the registered bots every 60 seconds. It is then aggregate to hourly buckets which is shown avove. You can deploy your own bot health checker using the source code below. The bot also pings everyone whenever if one of the bot is offline or is back online again.
+        </p>
+        <div className="flex flex-col">
+          <Link href="">Web Source Code <LucideArrowUpRight className="inline mb-0.5" /></Link>
+          <Link href="">Bot Checker Source Code <LucideArrowUpRight className="inline mb-0.5" /></Link>
+        </div>
+        <div>
+          Made by alfonsusac
+        </div>
+      </section>
     </div>
   )
 }
@@ -36,8 +49,6 @@ async function BotStatuses() {
     '#d97706',
     '#d97706',
     '#ca8a04',
-    '#65a30d',
-    '#22c55e',
   ])
 
   return <div className="flex flex-col gap-18">
@@ -81,12 +92,12 @@ async function BotStatuses() {
             </div>
           </div>
           <div className="text-fg/50">{'<-'} Now</div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1.5">
             {botStatus.hourly.toReversed().map((hour, hour_id) => {
               return (
-                <div key={hour_id} className="size-12 rounded-sm bg-fg/5 relative group"
+                <div key={hour_id} className="size-12 h-12 w-2.5 rounded-xs bg-fg/5 relative group"
                   style={{
-                    background: formatCss(color(hour.uptime_pct / 100))
+                    background: hour.uptime_pct === 100 ? "#22c55e" : formatCss(color(hour.uptime_pct / 100))
                   }}
                 >
                   <div className={cn(
