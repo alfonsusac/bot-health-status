@@ -25,8 +25,14 @@ export default function Home() {
           This site works by checking the presence of the registered bots every 60 seconds. It is then aggregate to hourly buckets which is shown avove. You can deploy your own bot health checker using the source code below. The bot also pings everyone whenever if one of the bot is offline or is back online again.
         </p>
         <div className="flex flex-col">
-          <Link href="">Web Source Code <LucideArrowUpRight className="inline mb-0.5" /></Link>
-          <Link href="">Bot Checker Source Code <LucideArrowUpRight className="inline mb-0.5" /></Link>
+          <Link
+            href="https://github.com/alfonsusac/bot-health-status">
+            Web Source Code <LucideArrowUpRight className="inline mb-0.5" />
+          </Link>
+          <Link
+            href="https://github.com/alfonsusac/honeypot-health-check">Bot
+            Checker Source Code <LucideArrowUpRight className="inline mb-0.5" />
+          </Link>
         </div>
         <div>
           Made by alfonsusac
