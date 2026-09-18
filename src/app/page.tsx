@@ -99,6 +99,7 @@ async function BotStatuses() {
                     "origin-top",
                     "pointer-events-none group-hover:pointer-events-auto",
                     "pt-2",
+                    "z-50",
                   )}>
                     <div className={cn(
                       "bg-bg border border-fg/30 rounded-md p-1 px-2",
