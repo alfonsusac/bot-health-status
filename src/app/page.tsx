@@ -7,8 +7,6 @@ import { formatRelative } from "@/lib/util-date-format"
 import { BotHeader } from "@/lib/ui-bot-header"
 import { BotCurrent } from "@/lib/ui-bot-current"
 import { BotTimeline } from "@/lib/ui-bot-timeline"
-import Head from "next/head"
-import { ComponentType, type APIContainerComponent } from "discord-api-types/v10"
 
 
 
@@ -47,9 +45,13 @@ export default function Home() {
         <div>
           Made by alfonsusac
         </div>
-        <div className="text-sm pt-8 opacity-50">
+        <div className="text-sm pt-8 opacity-50 flex gap-4">
           <Link href="https://vercel.com/alfonsusacs-projects/bot-health-status">
             Vercel <LucideArrowUpRight className="inline mb-0.5" />
+          </Link>
+
+          <Link href="https://discord.gg/c8MYbXtfvG">
+            Alfon's Server  <LucideArrowUpRight className="inline mb-0.5" />
           </Link>
         </div>
       </section>
