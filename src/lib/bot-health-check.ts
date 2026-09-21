@@ -1,4 +1,4 @@
-import { unstable_cache } from "next/cache"
+import { cacheLife, unstable_cache } from "next/cache"
 import { notFound } from "next/navigation"
 
 /**
@@ -92,21 +92,44 @@ export type BotStatusResponse = BotStatus & {
 
 export type ApiError = {
   error: string
-};
+}
 
 
 
 
-export const get_bots = unstable_cache(async function () {
+// export const get_bots = unstable_cache(async function () {
+//   if (process.env.DATA_URL === undefined) throw new Error("DATA_URL process env is required!")
+//   const res = await fetch(new URL('/bots', process.env.DATA_URL).toString())
+//   const data = await res.json() as BotsResponse
+//   return data
+// }, [], {
+//   revalidate: 60 * 10 // every 10 mins
+// })
+
+// export const get_bot = unstable_cache(async function (id: string, page?: number) {
+//   if (process.env.DATA_URL === undefined) throw new Error("DATA_URL process env is required!")
+//   const url = new URL(`/bot/${ id }`, process.env.DATA_URL)
+//   page && url.searchParams.set('page', String(page))
+//   const res = await fetch(url.toString())
+//   const data = await res.json() as BotStatusResponse
+//   if (data.error === "not found") notFound()
+//   if (data.error) throw new Error(`API Error: ${ data.error }`)
+//   return data
+// })
+
+
+export const get_bots = async function () {
+  "use cache"
+
   if (process.env.DATA_URL === undefined) throw new Error("DATA_URL process env is required!")
   const res = await fetch(new URL('/bots', process.env.DATA_URL).toString())
   const data = await res.json() as BotsResponse
   return data
-}, [], {
-  revalidate: 60 * 10 // every 10 mins
-})
+}
 
-export const get_bot = unstable_cache(async function (id: string, page?: number) {
+export const get_bot = async function (id: string, page?: number) {
+  "use cache"
+
   if (process.env.DATA_URL === undefined) throw new Error("DATA_URL process env is required!")
   const url = new URL(`/bot/${ id }`, process.env.DATA_URL)
   page && url.searchParams.set('page', String(page))
@@ -115,4 +138,4 @@ export const get_bot = unstable_cache(async function (id: string, page?: number)
   if (data.error === "not found") notFound()
   if (data.error) throw new Error(`API Error: ${ data.error }`)
   return data
-})
+}

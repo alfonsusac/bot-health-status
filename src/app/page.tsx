@@ -7,10 +7,12 @@ import { formatRelative } from "@/lib/util-date-format"
 import { BotHeader } from "@/lib/ui-bot-header"
 import { BotCurrent } from "@/lib/ui-bot-current"
 import { BotTimeline } from "@/lib/ui-bot-timeline"
+import { cacheLife } from "next/cache"
 
 
 
 export default function Home() {
+
   return (
     <div className="flex flex-col gap-20 h-full">
 
@@ -18,9 +20,6 @@ export default function Home() {
         <h1 className="text-4xl font-semibold tracking-tight">Discord Bot Health Status</h1>
         <p className="max-w-100">Monitor the health and status of various Discord bot by checking their presence.</p>
       </header>
-
-
-
 
       <Suspense fallback={<div className="grow">Loading bot statuses...</div>}>
         <BotStatuses />
@@ -59,6 +58,12 @@ export default function Home() {
 
 
 async function BotStatuses() {
+  "use cache"
+  cacheLife({
+    stale: 60,
+    revalidate: 60,
+    expire: 60,
+  })
 
   const status = await get_bots()
 

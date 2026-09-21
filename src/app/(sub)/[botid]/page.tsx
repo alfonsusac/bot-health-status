@@ -4,6 +4,7 @@ import { BotTimeline } from "@/lib/ui-bot-timeline"
 import { formatRelative } from "@/lib/util-date-format"
 import { toNonNaNNumber } from "@/lib/util-number"
 import { cn } from "cn"
+import { cacheLife } from "next/cache"
 import Link from "next/link"
 import { Suspense } from "react"
 
@@ -27,6 +28,12 @@ export default function BotPage(props: PageProps<"/[botid]">) {
 
 
 async function BotPageAsync(props: PageProps<"/[botid]">) {
+  "use cache"
+  cacheLife({
+    stale: 60,
+    revalidate: 60,
+    expire: 60,
+  })
 
   const param = await props.params
   const sp = await props.searchParams

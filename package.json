@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev -p 3024",
     "build": "next build",
-    "start": "next start -p 3024"
+    "start": "next start -p 3024",
+    "prod": "next build && next start -p 3024"
   },
   "dependencies": {
     "@types/culori": "^4.0.1",
