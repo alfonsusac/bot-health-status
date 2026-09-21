@@ -32,7 +32,7 @@ async function BotPageAsync(props: PageProps<"/[botid]">) {
   cacheLife({
     stale: 60,
     revalidate: 60,
-    expire: 60,
+    expire: 120,
   })
 
   const param = await props.params

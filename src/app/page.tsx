@@ -62,7 +62,7 @@ async function BotStatuses() {
   cacheLife({
     stale: 60,
     revalidate: 60,
-    expire: 60,
+    expire: 120,
   })
 
   const status = await get_bots()
