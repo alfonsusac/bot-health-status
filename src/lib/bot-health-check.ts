@@ -119,7 +119,7 @@ export type ApiError = {
 
 
 export const get_bots = async function () {
-  "use cache"
+  "use cache: remote"
 
   console.log("------ await get_bots() ------")
 
@@ -130,7 +130,7 @@ export const get_bots = async function () {
 }
 
 export const get_bot = async function (id: string, page?: number) {
-  "use cache"
+  "use cache: remote"
 
   console.log("------ await get_bot(id, page) ------")
 
