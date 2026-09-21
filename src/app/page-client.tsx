@@ -6,10 +6,10 @@ import { useEffect, useState } from "react"
 
 export function RelativeTime(props: {
   time: string,
-  serverDisplay: string,
+  serverDisplay?: string,
 }) {
 
-  const [ display, setDisplay ] = useState(props.serverDisplay)
+  const [ display, setDisplay ] = useState('-')
   useEffect(() => {
     const loop = () => {
       setDisplay(appFormatRelative(props.time))

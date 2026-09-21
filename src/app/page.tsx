@@ -7,6 +7,7 @@ import { appFormatRelative } from "@/lib/util-date-format"
 import { BotHeader } from "@/lib/ui-bot-header"
 import { BotCurrent } from "@/lib/ui-bot-current"
 import { BotTimeline } from "@/lib/ui-bot-timeline"
+import { cacheLife } from "next/cache"
 // import { cacheLife } from "next/cache"
 
 
@@ -27,45 +28,20 @@ export default function Home() {
         <BotStatuses />
       </Suspense>
 
-      <section className="flex flex-col **:leading-7 *:my-3">
-        <p>
-          This site works by checking the presence of the registered bots every 60 seconds. It is then aggregate to hourly buckets which is shown avove. You can deploy your own bot health checker using the source code below. The bot also pings everyone whenever if one of the bot is offline or is back online again.
-        </p>
-        <div className="flex flex-col">
-          <Link
-            href="https://github.com/alfonsusac/bot-health-status">
-            Web Source Code <LucideArrowUpRight className="inline mb-0.5" />
-          </Link>
-          <Link
-            href="https://github.com/alfonsusac/honeypot-health-check">Bot
-            Checker Source Code <LucideArrowUpRight className="inline mb-0.5" />
-          </Link>
-        </div>
-        <div>
-          Made by alfonsusac
-        </div>
-        <div className="text-sm pt-8 opacity-50 flex gap-4">
-          <Link href="https://vercel.com/alfonsusacs-projects/bot-health-status">
-            Vercel <LucideArrowUpRight className="inline mb-0.5" />
-          </Link>
 
-          <Link href="https://discord.gg/c8MYbXtfvG">
-            Alfon's Server  <LucideArrowUpRight className="inline mb-0.5" />
-          </Link>
-        </div>
-      </section>
     </div>
   )
 }
 
 
 async function BotStatuses() {
-  // "use cache"
-  // cacheLife({
-  //   stale: 60,
-  //   revalidate: 60,
-  //   expire: 120,
-  // })
+  "use cache"
+  cacheLife({
+    // stale: 60,
+    // revalidate: 60,
+    // expire: 5 * 60,
+    expire: 60,
+  })
 
   console.log("------ <BotStatuses /> ------")
 
