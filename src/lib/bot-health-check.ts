@@ -119,12 +119,12 @@ export type ApiError = {
 
 
 export const get_bots = async function () {
-  "use cache: remote"
-  cacheLife({
-    stale: 60,
-    revalidate: 60,
-    expire: 120,
-  })
+  // "use cache: remote"
+  // cacheLife({
+  //   stale: 60,
+  //   revalidate: 60,
+  //   expire: 120,
+  // })
 
   console.log("------ await get_bots() ------")
 
@@ -135,12 +135,12 @@ export const get_bots = async function () {
 }
 
 export const get_bot = async function (id: string, page?: number) {
-  "use cache: remote"
-  cacheLife({
-    stale: 60,
-    revalidate: 60,
-    expire: 120,
-  })
+  // "use cache: remote"
+  // cacheLife({
+  //   stale: 60,
+  //   revalidate: 60,
+  //   expire: 120,
+  // })
 
   console.log("------ await get_bot(id, page) ------")
 

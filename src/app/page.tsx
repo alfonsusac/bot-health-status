@@ -35,12 +35,14 @@ export default function Home() {
 
 
 async function BotStatuses() {
-  "use cache"
+  // "use cache"
+  "use cache: remote"
   cacheLife({
-    // stale: 60,
-    // revalidate: 60,
+    stale: 60,
+    revalidate: 60,
+    expire: 60,
     // expire: 5 * 60,
-    expire: 60 * 5,
+    // expire: 60 * 5,
   })
 
   console.log("------ <BotStatuses /> ------")
