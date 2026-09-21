@@ -11,6 +11,7 @@ export function RelativeTime(props: {
 
   const [ display, setDisplay ] = useState('-')
   useEffect(() => {
+    setDisplay(appFormatRelative(props.time))
     const loop = () => {
       setDisplay(appFormatRelative(props.time))
     }

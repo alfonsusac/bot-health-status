@@ -1,4 +1,4 @@
-import { cacheLife, unstable_cache } from "next/cache"
+import { cacheLife, cacheTag, unstable_cache } from "next/cache"
 import { notFound } from "next/navigation"
 
 /**
@@ -90,6 +90,17 @@ export type BotStatusResponse = BotStatus & {
   total: number
 }
 
+// Pagination metadata for a bot's timeline — no timeline payload. Cheap enough to
+// poll; the site uses it to know when the number of pages changes (the watchdog
+// separately POSTs a "bot-<id>-pages" revalidate tag on that change).
+export type BotPagesResponse = {
+  botId: string
+  total: number
+  total_pages: number
+  first_page_index: 1
+  page_size: number
+}
+
 export type ApiError = {
   error: string
 }
@@ -119,12 +130,8 @@ export type ApiError = {
 
 
 export const get_bots = async function () {
-  // "use cache: remote"
-  // cacheLife({
-  //   stale: 60,
-  //   revalidate: 60,
-  //   expire: 120,
-  // })
+  "use cache: remote"
+  cacheTag('all-bots')
 
   console.log("------ await get_bots() ------")
 
@@ -135,15 +142,23 @@ export const get_bots = async function () {
 }
 
 export const get_bot = async function (id: string, page?: number) {
-  // "use cache: remote"
-  // cacheLife({
-  //   stale: 60,
-  //   revalidate: 60,
-  //   expire: 120,
-  // })
+  console.log(`------ await get_bot(${ id }, ${ page }) ------`)
 
-  console.log("------ await get_bot(id, page) ------")
+  const pages = await get_bot_pages_info(id)
+  const page_parsed = page
+    ? Math.max(pages.first_page_index, Math.min(page, pages.total_pages))
+    : undefined
+  const bot = await get_bot_cached(id, page_parsed)
+  return { ...bot, ...pages }
+}
 
+
+
+
+async function get_bot_cached(id: string, page?: number) {
+  "use cache: remote"
+  cacheTag(`bot-${ id }`)
+  console.log(`------ await get_bot_cached(${ id }, ${ page }) ------`)
   if (process.env.DATA_URL === undefined) throw new Error("DATA_URL process env is required!")
   const url = new URL(`/bot/${ id }`, process.env.DATA_URL)
   page && url.searchParams.set('page', String(page))
@@ -151,5 +166,22 @@ export const get_bot = async function (id: string, page?: number) {
   const data = await res.json() as BotStatusResponse
   if (data.error === "not found") notFound()
   if (data.error) throw new Error(`API Error: ${ data.error }`)
+  if (page !== undefined && data.page !== page) {
+    throw new Error('No cache: page parameter doesn\'t match. skipping cache + throw')
+  }
+  return data
+}
+
+
+
+
+async function get_bot_pages_info(id: string) {
+  "use cache: remote"
+  cacheTag(`bot-${ id }-pages`)
+  console.log(`------ await get_bot_pages_info(${ id }) ------`)
+  if (process.env.DATA_URL === undefined) throw new Error("DATA_URL process env is required!")
+  const url = new URL(`/bot/${ id }/pages`, process.env.DATA_URL)
+  const res = await fetch(url.toString())
+  const data = await res.json() as BotPagesResponse
   return data
 }

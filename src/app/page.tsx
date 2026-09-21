@@ -7,7 +7,7 @@ import { appFormatRelative } from "@/lib/util-date-format"
 import { BotHeader } from "@/lib/ui-bot-header"
 import { BotCurrent } from "@/lib/ui-bot-current"
 import { BotTimeline } from "@/lib/ui-bot-timeline"
-import { cacheLife } from "next/cache"
+import { cacheLife, cacheTag } from "next/cache"
 // import { cacheLife } from "next/cache"
 
 
@@ -35,23 +35,13 @@ export default function Home() {
 
 
 async function BotStatuses() {
-  // "use cache"
-  "use cache: remote"
-  cacheLife({
-    stale: 60,
-    revalidate: 60,
-    expire: 60,
-    // expire: 5 * 60,
-    // expire: 60 * 5,
-  })
+  "use cache"
 
   console.log("------ <BotStatuses /> ------")
-
 
   const status = await get_bots()
 
   return <div className="flex flex-col gap-18">
-
     {status.bots.map((bot) => {
       const endTimelineDate = bot.timeline.at(-1)
       const endTimeLabel = endTimelineDate
@@ -79,13 +69,4 @@ async function BotStatuses() {
     })}
     Site updated at: <RelativeTime time={new Date().toISOString()} serverDisplay={appFormatRelative(new Date().toISOString())} />
   </div>
-}
-
-
-
-async function WatchdogStatus() {
-  return <>
-    <div></div>
-
-  </>
 }
