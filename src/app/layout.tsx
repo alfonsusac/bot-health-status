@@ -1,7 +1,8 @@
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
-import { Analytics } from '@vercel/analytics/next';
+import { Analytics } from '@vercel/analytics/next'
+import { ComponentType, type APIContainerComponent } from "discord-api-types/v10"
 
 
 const geistSans = Geist({
@@ -25,6 +26,26 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${ geistSans.variable } ${ geistMono.variable } h-full antialiased`}
     >
+      {/* <head>
+        <script id="discord:component-embed" type="application/json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "component": {
+                "type": ComponentType.Container, // <- this shit is still confusing
+                "components": [
+                  {
+                    "type": ComponentType.TextDisplay, // <- this shit is still confusing
+                    "content": [
+                      "### Discord Bot Health Status",
+                      "Monitor the health and status of various Discord bot by checking their presence.",
+                    ].join('\n')
+                  },
+                ]
+              } satisfies APIContainerComponent
+            })
+          }}
+        />
+      </head> */}
       <body className="min-h-full p-12 flex flex-col min-h-screen">
         <div className="flex flex-col max-w-180 mx-auto grow w-full">
           {children}

@@ -16,10 +16,15 @@ export default function Home() {
   return (
     <div className="flex flex-col gap-20 h-full">
 
+
+
       <header className="pt-10 flex flex-col gap-2">
         <h1 className="text-4xl font-semibold tracking-tight">Discord Bot Health Status</h1>
         <p className="max-w-100">Monitor the health and status of various Discord bot by checking their presence.</p>
       </header>
+
+
+
 
       <Suspense fallback={<div className="grow">Loading bot statuses...</div>}>
         <BotStatuses />
@@ -58,27 +63,6 @@ async function BotStatuses() {
   const status = await get_bots()
 
   return <div className="flex flex-col gap-18">
-    <Head>
-      <script id="discord:component-embed" type="application/json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "component": {
-              "type": ComponentType.Container, // <- this shit is still confusing
-              "components": [
-                {
-                  "type": ComponentType.TextDisplay, // <- this shit is still confusing
-                  "content": [
-                    "# Discord Bot Health Status",
-                    "Monitor the health and status of various Discord bot by checking their presence.",
-                    `Currently watching ${ status.bots.length } bots`
-                  ].join('\n')
-                },
-              ]
-            } satisfies APIContainerComponent
-          })
-        }}
-      />
-    </Head>
 
     {status.bots.map((bot) => {
       const endTimelineDate = bot.timeline.at(-1)
