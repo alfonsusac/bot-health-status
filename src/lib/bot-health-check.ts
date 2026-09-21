@@ -121,6 +121,8 @@ export type ApiError = {
 export const get_bots = async function () {
   "use cache"
 
+  console.log("------ await get_bots() ------")
+
   if (process.env.DATA_URL === undefined) throw new Error("DATA_URL process env is required!")
   const res = await fetch(new URL('/bots', process.env.DATA_URL).toString())
   const data = await res.json() as BotsResponse
@@ -129,6 +131,8 @@ export const get_bots = async function () {
 
 export const get_bot = async function (id: string, page?: number) {
   "use cache"
+
+  console.log("------ await get_bot(id, page) ------")
 
   if (process.env.DATA_URL === undefined) throw new Error("DATA_URL process env is required!")
   const url = new URL(`/bot/${ id }`, process.env.DATA_URL)

@@ -13,6 +13,8 @@ import { cacheLife } from "next/cache"
 
 export default function Home() {
 
+  console.log("------ <Home /> ------")
+
   return (
     <div className="flex flex-col gap-20 h-full">
 
@@ -64,6 +66,9 @@ async function BotStatuses() {
     revalidate: 60,
     expire: 120,
   })
+
+  console.log("------ <BotStatuses /> ------")
+
 
   const status = await get_bots()
 
