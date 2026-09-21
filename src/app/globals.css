@@ -13,3 +13,12 @@ body {
   background: var(--color-bg);
   color: var(--color-fg);
 }
+
+.button {
+  @apply p-1.5 px-4 text-fg/75 text-nowrap
+  /* border border-fg/10 */
+  flex items-center gap-1.5
+  cursor-pointer
+  hover:bg-fg/10
+  active:bg-fg/12
+}

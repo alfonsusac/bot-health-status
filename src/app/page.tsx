@@ -1,19 +1,24 @@
-import { get_bot_list, get_bot_status } from "@/lib/bot-health-check"
-import { cn } from "cn"
+import { get_bots } from "@/lib/bot-health-check"
 import { Suspense } from "react"
-import { interpolate, formatCss } from 'culori'
 import Link from "next/link"
 import { LucideArrowUpRight } from "@/lib/icons"
 import { RelativeTime } from "./page-client"
+import { formatRelative } from "@/lib/util-date-format"
+import { BotHeader } from "@/lib/ui-bot-header"
+import { BotCurrent } from "@/lib/ui-bot-current"
+import { BotTimeline } from "@/lib/ui-bot-timeline"
+import Head from "next/head"
+import { ComponentType, type APIContainerComponent } from "discord-api-types/v10"
 
 
 
 export default function Home() {
   return (
     <div className="flex flex-col gap-20 h-full">
-      <header className="pt-10">
+
+      <header className="pt-10 flex flex-col gap-2">
         <h1 className="text-4xl font-semibold tracking-tight">Discord Bot Health Status</h1>
-        <p className="">Monitor the health and status of various Discord bot by checking their presence.</p>
+        <p className="max-w-100">Monitor the health and status of various Discord bot by checking their presence.</p>
       </header>
 
       <Suspense fallback={<div className="grow">Loading bot statuses...</div>}>
@@ -50,110 +55,65 @@ export default function Home() {
 
 async function BotStatuses() {
 
-  const status = await get_bot_status()
-  const bots = await get_bot_list()
-
-
-  const color = interpolate([
-    '#dc2626',
-    '#ea580c',
-    '#d97706',
-    '#d97706',
-    '#ca8a04',
-  ])
+  const status = await get_bots()
 
   return <div className="flex flex-col gap-18">
-    {Object.entries(status.bots).map(([ botId, botStatus ]) => {
-      const bot = bots.bots.find(b => b.id === botId)
-      return <div key={botId} className="flex flex-col gap-4">
-        <div className="flex gap-2">
-          <img className="size-12 rounded-md" width={48} height={48} src={bot?.icon ?? ""} />
-          <div className="flex flex-col mt-1">
-            <h2 className="text-2xl font-semibold tracking-tight leading-6">{bot?.display_name ?? bot?.username ?? bot?.tag ?? botId}</h2>
-            <div className="flex items-center gap-2">
-              <p className="text-fg/50" >{bot?.tag} by {bot?.author}</p>
-              <div className="border-l border-l-fg/50 w-px h-5 mx-2" />
-              <Link href={bot?.support_server ?? "#"}
-                className="text-fg/50 hover:text-fg/100 -m-2 p-2"
-                target="_blank"
-              >
-                Support Server <LucideArrowUpRight className="inline mb-1" />
+    <Head>
+      <script id="discord:component-embed" type="application/json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "component": {
+              "type": ComponentType.Container, // <- this shit is still confusing
+              "components": [
+                {
+                  "type": ComponentType.TextDisplay, // <- this shit is still confusing
+                  "content": [
+                    "# Discord Bot Health Status",
+                    "Monitor the health and status of various Discord bot by checking their presence.",
+                    `Currently watching ${ status.bots.length } bots`
+                  ].join('\n')
+                },
+              ]
+            } satisfies APIContainerComponent
+          })
+        }}
+      />
+    </Head>
+
+    {status.bots.map((bot) => {
+      const endTimelineDate = bot.timeline.at(-1)
+      const endTimeLabel = endTimelineDate
+        ? new Date(endTimelineDate.time)
+        : "unknown"
+
+      return <div key={bot.id} className="flex flex-col gap-4">
+
+        <BotHeader bot={bot} />
+        <div className="flex flex-col gap-2">
+          <BotCurrent bot={bot} />
+          <div className="flex flex-col gap-2">
+            <BotTimeline bot={bot} />
+            <div className="flex items-center justify-between">
+              <div className="opacity-25">
+                Showing 10 Results | From now - {formatRelative(endTimeLabel)}
+              </div>
+              <Link href={`/${ bot.id }`} className="button">
+                See More {'->'}
               </Link>
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2">
-            <div className={cn("size-2.5 bg-red-400 rounded-full",
-              botStatus.latest?.status === "offline" ? "bg-red-500"
-                : botStatus.latest?.status === "online" ? "bg-green-500"
-                  : botStatus.latest?.status === "stale" ? "bg-orange-500" :
-                    botStatus.latest?.status === "unknown" ? "bg-fg/50" : "bg-fg/10"
-            )} />
-            <div>
-              {botStatus.latest?.status === "offline" ? "Offline"
-                : botStatus.latest?.status === "online" ? "Online"
-                  : botStatus.latest?.status === "stale" ? "Stale" :
-                    botStatus.latest?.status === "unknown" ? "Unknown" : "??"
-              }
-            </div>
-            <div className="border-l border-l-fg/50 w-px h-5 mx-2" />
-            <div>
-              Last seen: {botStatus.latest?.last_seen ? <RelativeTime time={new Date(botStatus.latest?.last_seen).toISOString()} /> : "Unknown"}
-            </div>
-          </div>
-          <div className="text-fg/50">{'<-'} Now</div>
-          <div className="flex flex-wrap gap-1.5">
-            {botStatus.hourly.toReversed().map((hour, hour_id) => {
-              return (
-                <div key={hour_id} className="size-12 h-12 w-2.5 rounded-xs bg-fg/5 relative group"
-                  style={{
-                    background: hour.uptime_pct === 100 ? "#22c55e" : formatCss(color(hour.uptime_pct / 100))
-                  }}
-                >
-                  <div className={cn(
-                    "absolute bottom-0 translate-y-full left-1/2 -translate-x-1/2",
-                    // "bg-bg border border-fg/30 rounded-md p-1 px-2",
-                    // "text-sm w-max max-w-60",
-                    "transition-all duration-150",
-                    "opacity-0 group-hover:opacity-100",
-                    "scale-90 group-hover:scale-100",
-                    "origin-top",
-                    "pointer-events-none group-hover:pointer-events-auto",
-                    "pt-2",
-                    "z-50",
-                  )}>
-                    <div className={cn(
-                      "bg-bg border border-fg/30 rounded-md p-1 px-2",
-                      "text-sm w-max max-w-60",
-                    )}>
-                      <div className="">
-                        {new Date(hour.hour).toLocaleString('en-US', {
-                          timeStyle: "short",
-                          dateStyle: "medium",
-                        })}
-                      </div>
-                      <div className="">
-                        {hour.uptime_pct}% uptime
-                      </div>
-                      <div className="">
-                        {hour.online} online pings
-                      </div>
-                      <div className="">
-                        {hour.offline} offline pings
-                      </div>
-                      <div className="">
-                        {hour.total} total pings
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </div>
       </div>
     })}
-    Updated at: <RelativeTime time={new Date().toISOString()} />
+    Site updated at: <RelativeTime time={new Date().toISOString()} />
   </div>
+}
+
+
+
+async function WatchdogStatus() {
+  return <>
+    <div></div>
+
+  </>
 }
