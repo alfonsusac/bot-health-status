@@ -28,12 +28,12 @@ export default function BotPage(props: PageProps<"/[botid]">) {
 
 
 async function BotPageAsync(props: PageProps<"/[botid]">) {
-  "use cache"
-  cacheLife({
-    stale: 60,
-    revalidate: 60,
-    expire: 120,
-  })
+  // "use cache"
+  // cacheLife({
+  //   stale: 60,
+  //   revalidate: 60,
+  //   expire: 120,
+  // })
 
   const param = await props.params
   const sp = await props.searchParams

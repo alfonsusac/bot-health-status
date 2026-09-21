@@ -7,7 +7,7 @@ import { appFormatRelative } from "@/lib/util-date-format"
 import { BotHeader } from "@/lib/ui-bot-header"
 import { BotCurrent } from "@/lib/ui-bot-current"
 import { BotTimeline } from "@/lib/ui-bot-timeline"
-import { cacheLife } from "next/cache"
+// import { cacheLife } from "next/cache"
 
 
 
@@ -60,12 +60,12 @@ export default function Home() {
 
 
 async function BotStatuses() {
-  "use cache"
-  cacheLife({
-    stale: 60,
-    revalidate: 60,
-    expire: 120,
-  })
+  // "use cache"
+  // cacheLife({
+  //   stale: 60,
+  //   revalidate: 60,
+  //   expire: 120,
+  // })
 
   console.log("------ <BotStatuses /> ------")
 
