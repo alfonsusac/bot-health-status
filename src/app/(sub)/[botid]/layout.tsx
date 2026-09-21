@@ -6,6 +6,15 @@ export async function generateStaticParams() {
   const bots = await get_bots()
   const botids: string[] = []
   bots.bots.map(bot => { botids.push(bot.id) })
+  for (const { id } of bots.bots) {
+    const bot = await get_bot(id)
+    Array.from({ length: bot.total_pages }, (_, i) => {
+      const page = bot.first_page_index + i
+      if (page === bot.first_page_index)
+        return
+      botids.push(`${ id }_${ page }`)
+    })
+  }
   return botids.map(botid => ({ botid: botid }))
 }
 
@@ -22,7 +31,7 @@ async function BotPageLayoutAsync(props: LayoutProps<"/[botid]">) {
   cacheLife("max")
   console.log("------ <BotPageLayoutAsync /> ------")
   const param = await props.params
-  const botid = param.botid
+  const [ botid, page_raw_str ] = param.botid.split('_')
   const bot = await get_bot(botid)
 
   return <>

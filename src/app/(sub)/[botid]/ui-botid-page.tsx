@@ -22,22 +22,25 @@ export function BotPageStaticSuspenseShell(props: {
 
 
 
-export async function BotPageAsync(props: PageProps<"/[botid]"> | PageProps<"/[botid]/[number]">) {
+export async function BotPageAsync(props: PageProps<"/[botid]">) {
   "use cache"
   cacheLife("max")
 
   console.log("------ <BotPageAsync /> ------")
 
   const param = await props.params
-  const botid = param.botid
-  const page_raw = 'number' in param ? toNonNaNNumber(param.number, undefined) : undefined
+  console.log(param)
+  const [ botid, page_raw_str ] = param.botid.split('_')
+  const page_raw = toNonNaNNumber(page_raw_str, undefined)
   const bot = await get_bot(botid, page_raw)
 
   const hasPrev = bot.page > bot.first_page_index
   const hasNext = bot.page < bot.total_pages
 
-  const prevLink = hasPrev ? bot.page === 1 ? `/${ botid }` : `/${ botid }/${ bot.page - 1 }` : '#'
-  const nextLink = hasNext ? `/${ botid }/${ bot.page + 1 }` : '#'
+  console.log(bot.page)
+
+  const prevLink = hasPrev ? bot.page === 2 ? `/${ botid }` : `/${ botid }_${ bot.page - 1 }` : '#'
+  const nextLink = hasNext ? `/${ botid }_${ bot.page + 1 }` : '#'
 
   const endTimelineDate = bot.timeline.at(-1)
   const endTimeLabel = endTimelineDate
