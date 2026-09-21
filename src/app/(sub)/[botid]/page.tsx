@@ -1,7 +1,7 @@
 import { get_bot, get_bots } from "@/lib/bot-health-check"
 import { BotHeader } from "@/lib/ui-bot-header"
 import { BotTimeline } from "@/lib/ui-bot-timeline"
-import { formatRelative } from "@/lib/util-date-format"
+import { appFormatRelative } from "@/lib/util-date-format"
 import { toNonNaNNumber } from "@/lib/util-number"
 import { cn } from "cn"
 import { cacheLife } from "next/cache"
@@ -64,7 +64,7 @@ async function BotPageAsync(props: PageProps<"/[botid]">) {
               Showing {bot.timeline.length} out of {bot.total} results
             </div>
             <div>
-              From now - {formatRelative(endTimeLabel)}
+              From now - {appFormatRelative(endTimeLabel)}
             </div>
           </div>
           <div className="flex items-center gap-2">

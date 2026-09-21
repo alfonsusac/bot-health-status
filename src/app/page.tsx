@@ -3,7 +3,7 @@ import { Suspense } from "react"
 import Link from "next/link"
 import { LucideArrowUpRight } from "@/lib/icons"
 import { RelativeTime } from "./page-client"
-import { formatRelative } from "@/lib/util-date-format"
+import { appFormatRelative } from "@/lib/util-date-format"
 import { BotHeader } from "@/lib/ui-bot-header"
 import { BotCurrent } from "@/lib/ui-bot-current"
 import { BotTimeline } from "@/lib/ui-bot-timeline"
@@ -84,7 +84,7 @@ async function BotStatuses() {
             <BotTimeline bot={bot} />
             <div className="flex items-center justify-between">
               <div className="opacity-25">
-                Showing 10 Results | From now - {formatRelative(endTimeLabel)}
+                Showing 10 Results | From now - {appFormatRelative(endTimeLabel)}
               </div>
               <Link href={`/${ bot.id }`} className="button">
                 See More {'->'}
@@ -94,7 +94,7 @@ async function BotStatuses() {
         </div>
       </div>
     })}
-    Site updated at: <RelativeTime time={new Date().toISOString()} />
+    Site updated at: <RelativeTime time={new Date().toISOString()} serverDisplay={appFormatRelative(new Date().toISOString())} />
   </div>
 }
 
