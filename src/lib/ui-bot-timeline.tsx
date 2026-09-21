@@ -2,6 +2,7 @@ import { cn } from "cn"
 import { format } from "date-fns"
 import type { BotStatus } from "./bot-health-check"
 import { formatRelative } from "./util-date-format"
+import { RelativeTime } from "@/app/page-client"
 
 export function BotTimeline(props: {
   bot: BotStatus
@@ -40,7 +41,7 @@ export function BotTimeline(props: {
             </div>
           </div>
           <div className="text-fg/25">
-            {formatRelative(date)}
+            <RelativeTime time={mark.time} />
           </div>
         </div>)
       })}

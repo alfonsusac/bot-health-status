@@ -14,8 +14,6 @@ export default function Home() {
   return (
     <div className="flex flex-col gap-20 h-full">
 
-
-
       <header className="pt-10 flex flex-col gap-2">
         <h1 className="text-4xl font-semibold tracking-tight">Discord Bot Health Status</h1>
         <p className="max-w-100">Monitor the health and status of various Discord bot by checking their presence.</p>
