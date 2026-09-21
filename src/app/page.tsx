@@ -40,7 +40,7 @@ async function BotStatuses() {
     // stale: 60,
     // revalidate: 60,
     // expire: 5 * 60,
-    expire: 60,
+    expire: 60 * 5,
   })
 
   console.log("------ <BotStatuses /> ------")

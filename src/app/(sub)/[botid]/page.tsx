@@ -35,7 +35,7 @@ async function BotPageAsync(props: PageProps<"/[botid]">) {
     // revalidate: 60,
     // expire: 120,
     // expire: 5 * 60,
-    expire: 60,
+    expire: 60 * 5,
   })
 
   const param = await props.params
