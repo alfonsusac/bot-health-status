@@ -26,7 +26,7 @@ export function BotCurrent(props: {
       </div>
       <div className="border-l border-l-fg/50 w-px h-5 mx-2" />
       <div>
-        Last update: {bot.latest?.last_seen ? <RelativeTime time={bot.latest?.last_seen} serverDisplay={appFormatRelative(bot.latest?.last_seen)} /> : "Unknown"}
+        Last seen: {bot.latest?.last_seen ? <RelativeTime time={bot.latest?.last_seen} serverDisplay={appFormatRelative(bot.latest?.last_seen)} /> : "Unknown"}
       </div>
     </div>
   )

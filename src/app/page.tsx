@@ -54,7 +54,7 @@ async function BotStatuses() {
             <BotTimeline bot={bot} />
             <div className="flex items-center justify-between">
               <div className="opacity-25">
-                Showing 10 Results | From now - {appFormatRelative(endTimeLabel)}
+                Showing 10 Results | From now - {endTimelineDate?.time ? <RelativeTime time={endTimelineDate.time} /> : "unknown"}
               </div>
               <Link href={`/${ bot.id }`} className="button">
                 See More {'->'}
