@@ -1,5 +1,6 @@
 import { RelativeTime } from "@/app/page-client"
 import { get_bot } from "@/lib/bot-health-check"
+import { BotCurrent } from "@/lib/ui-bot-current"
 import { BotTimeline } from "@/lib/ui-bot-timeline"
 import { appFormatRelative } from "@/lib/util-date-format"
 import { toNonNaNNumber } from "@/lib/util-number"
@@ -31,9 +32,6 @@ export async function BotPageAsync(props: {
 
   console.log("------ <BotPageAsync /> ------")
 
-  // const param = await props.params
-  // console.log(param)
-  // const [ botid, page_raw_str ] = param.botid.split('_')
   const page_raw = toNonNaNNumber(props.page_raw, undefined)
   const bot = await get_bot(props.botid, page_raw)
 
@@ -53,6 +51,7 @@ export async function BotPageAsync(props: {
   const disabledCn = cn("opacity-25 pointer-events-none")
 
   return <>
+    <BotCurrent bot={bot} />
     <div className="flex flex-col gap-2">
       <BotTimeline bot={bot} />
       <div className="flex items-center justify-between flex-wrap  sticky bottom-0 bg-black pb-8 pt-4">

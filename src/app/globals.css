@@ -22,3 +22,8 @@ body {
   hover:bg-fg/10
   active:bg-fg/12
 }
+
+.input {
+  @apply border p-2 px-2.5 border-fg/20 
+  
+}

@@ -4,6 +4,7 @@ import "./globals.css"
 import { Analytics } from '@vercel/analytics/next'
 import { LucideArrowUpRight } from "@/lib/icons"
 import Link from "next/link"
+import { SetTimeFormat, TimeFormatProvider } from "./page-client"
 
 
 const geistSans = Geist({
@@ -27,29 +28,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${ geistSans.variable } ${ geistMono.variable } h-full antialiased`}
     >
-      {/* <head>
-        <script id="discord:component-embed" type="application/json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "component": {
-                "type": ComponentType.Container, // <- this shit is still confusing
-                "components": [
-                  {
-                    "type": ComponentType.TextDisplay, // <- this shit is still confusing
-                    "content": [
-                      "### Discord Bot Health Status",
-                      "Monitor the health and status of various Discord bot by checking their presence.",
-                    ].join('\n')
-                  },
-                ]
-              } satisfies APIContainerComponent
-            })
-          }}
-        />
-      </head> */}
       <body className="min-h-full p-12 flex flex-col min-h-screen">
         <div className="flex flex-col max-w-180 mx-auto grow w-full">
-          {children}
+          <TimeFormatProvider>
+            {children}
+            <SetTimeFormat />
+          </TimeFormatProvider>
           <section className="flex flex-col **:leading-7 *:my-3 pt-4">
             <p>
               This site works by checking the presence of the registered bots every 60 seconds. It is then aggregate to hourly buckets which is shown avove. You can deploy your own bot health checker using the source code below. The bot also pings everyone whenever if one of the bot is offline or is back online again.

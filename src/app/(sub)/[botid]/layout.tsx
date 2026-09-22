@@ -33,10 +33,7 @@ async function BotPageLayoutAsync(props: {
   "use cache"
   cacheLife("max")
   console.log("------ <BotPageLayoutAsync /> ------")
-  // const param = await props.params
-  // const [ botid, page_raw_str ] = param.botid.split('_')
   const bot = await get_bot(props.botid)
-
   return <>
     <header className="flex flex-col gap-4">
       <BotHeader bot={bot} />
