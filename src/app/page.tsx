@@ -1,14 +1,11 @@
 import { get_bots } from "@/lib/bot-health-check"
 import { Suspense } from "react"
 import Link from "next/link"
-import { LucideArrowUpRight } from "@/lib/icons"
 import { RelativeTime } from "./page-client"
 import { appFormatRelative } from "@/lib/util-date-format"
 import { BotHeader } from "@/lib/ui-bot-header"
 import { BotCurrent } from "@/lib/ui-bot-current"
 import { BotTimeline } from "@/lib/ui-bot-timeline"
-import { cacheLife, cacheTag } from "next/cache"
-// import { cacheLife } from "next/cache"
 
 
 

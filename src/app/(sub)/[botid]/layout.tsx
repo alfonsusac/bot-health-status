@@ -19,20 +19,23 @@ export async function generateStaticParams() {
 }
 
 
-export default function BotPageLayout(props: LayoutProps<"/[botid]">) {
+export default async function BotPageLayout(props: LayoutProps<"/[botid]">) {
+  const [ botid, page_raw ] = (await props.params).botid.split('_')
   return <>
-    <BotPageLayoutAsync {...props} />
+    <BotPageLayoutAsync botid={botid} />
     {props.children}
   </>
 }
 
-async function BotPageLayoutAsync(props: LayoutProps<"/[botid]">) {
+async function BotPageLayoutAsync(props: {
+  botid: string
+}) {
   "use cache"
   cacheLife("max")
   console.log("------ <BotPageLayoutAsync /> ------")
-  const param = await props.params
-  const [ botid, page_raw_str ] = param.botid.split('_')
-  const bot = await get_bot(botid)
+  // const param = await props.params
+  // const [ botid, page_raw_str ] = param.botid.split('_')
+  const bot = await get_bot(props.botid)
 
   return <>
     <header className="flex flex-col gap-4">
