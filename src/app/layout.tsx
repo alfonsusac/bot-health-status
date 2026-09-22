@@ -36,7 +36,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </TimeFormatProvider>
           <section className="flex flex-col **:leading-7 *:my-3 pt-4">
             <p>
-              This site works by checking the presence of the registered bots every 60 seconds. It is then aggregate to hourly buckets which is shown avove. You can deploy your own bot health checker using the source code below. The bot also pings everyone whenever if one of the bot is offline or is back online again.
+              This app works by listening to /revalidate calls from the backend of this app that listens to the presence event change of registered bots in my server. You can deploy your own bot health checker using the source code below. The bot also pings everyone whenever if one of the bot is offline or is back online again.
             </p>
             <div className="flex flex-col">
               <Link target="_blank"
